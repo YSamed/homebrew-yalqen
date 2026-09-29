@@ -1,6 +1,6 @@
 # Homebrew tap for Yalqen
 
-[Yalqen](https://yalqen.com) is an open-source, Chromium-based developer browser for macOS.
+[Yalqen](https://yalqen.com/?utm_source=homebrew-tap&utm_medium=readme) is an open-source, Chromium-based developer browser for macOS.
 
 ```bash
 brew install --cask YSamed/yalqen/yalqen
