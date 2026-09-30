@@ -8,6 +8,6 @@ brew install --cask YSamed/yalqen/yalqen
 
 Requires macOS 13+ on Apple Silicon.
 
-Yalqen builds are not notarized yet. The cask removes the quarantine attribute after install so macOS opens the app without the "damaged" warning.
+Yalqen is signed with a Developer ID and notarized by Apple. It updates itself, so `brew upgrade` skips it unless you pass `--greedy`.
 
 Report app issues in [YSamed/yalqen](https://github.com/YSamed/yalqen/issues).

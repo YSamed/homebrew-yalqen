@@ -1,8 +1,8 @@
 cask "yalqen" do
   arch arm: "arm64"
 
-  version "0.1.0"
-  sha256 "d2f461922388b09987e34f431ae8e1494b28e879a59813d47978a62d89552e79"
+  version "0.2.11"
+  sha256 "5b81ba2c9c3ff4622dde8698701bfe3977e0016218c4808451e579dbc9259050"
 
   url "https://github.com/YSamed/yalqen/releases/download/v#{version}/Yalqen-#{version}-#{arch}.dmg"
   name "Yalqen"
@@ -14,18 +14,18 @@ cask "yalqen" do
     strategy :github_latest
   end
 
+  auto_updates true
   depends_on arch: :arm64
   depends_on macos: :ventura
 
   app "Yalqen.app"
 
-  postflight do
-    system_command "/usr/bin/xattr",
-                   args: ["-dr", "com.apple.quarantine", "#{appdir}/Yalqen.app"]
-  end
-
   zap trash: [
-    "~/Library/Application Support/Yalqen",
+    "~/Library/Application Support/yalqen-electron-prototype",
+    "~/Library/Caches/com.yalqen.browser",
+    "~/Library/Caches/com.yalqen.browser.ShipIt",
+    "~/Library/Caches/yalqen-updater",
+    "~/Library/HTTPStorages/com.yalqen.browser",
     "~/Library/Preferences/com.yalqen.browser.plist",
     "~/Library/Saved Application State/com.yalqen.browser.savedState",
   ]
