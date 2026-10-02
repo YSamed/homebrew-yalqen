@@ -1,0 +1,49 @@
+name: Bump cask
+
+on:
+  schedule:
+    - cron: '23 * * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: bump-cask
+  cancel-in-progress: false
+
+jobs:
+  bump:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Update to the latest Yalqen release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          CASK: Casks/yalqen.rb
+        run: |
+          latest=$(gh api repos/YSamed/yalqen/releases/latest --jq '.tag_name | ltrimstr("v")')
+          current=$(sed -n 's/^  version "\(.*\)"$/\1/p' "$CASK")
+          if [ "$latest" = "$current" ]; then
+            echo "Cask already at $current"
+            exit 0
+          fi
+
+          dmg="Yalqen-$latest-arm64.dmg"
+          # The release is published before its build uploads the DMG, so wait for the next run.
+          if ! gh api "repos/YSamed/yalqen/releases/tags/v$latest" --jq '.assets[].name' | grep -qxF "$dmg"; then
+            echo "$dmg is not uploaded yet"
+            exit 0
+          fi
+
+          curl -fsSL "https://github.com/YSamed/yalqen/releases/download/v$latest/$dmg" -o "$RUNNER_TEMP/$dmg"
+          sha=$(sha256sum "$RUNNER_TEMP/$dmg" | cut -d' ' -f1)
+          sed -i -e "s/^  version \".*\"$/  version \"$latest\"/" -e "s/^  sha256 \".*\"$/  sha256 \"$sha\"/" "$CASK"
+
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          printf 'feat: update yalqen cask to v%s\n\n- Update version from %s to %s\n- Update sha256 for %s\n' "$latest" "$current" "$latest" "$dmg" | git commit -a -F -
+          git push
