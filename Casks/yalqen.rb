@@ -1,8 +1,8 @@
 cask "yalqen" do
   arch arm: "arm64"
 
-  version "0.3.2"
-  sha256 "5ceba611b3387c12e24a864dff97181652a86489b7af2d31a32444338c91d8f8"
+  version "0.3.4"
+  sha256 "39abffd9eb6b60d48d7307de074e4215c062b59df64b17c5f657edad27ee32bd"
 
   url "https://github.com/YSamed/yalqen/releases/download/v#{version}/Yalqen-#{version}-#{arch}.dmg"
   name "Yalqen"
